@@ -5,7 +5,7 @@
         width: 40%;
         height: auto;
       }
-    </style>
+</style>
 
 <img title="a title" alt="Alt text" src="/images/MLB.png">
 
