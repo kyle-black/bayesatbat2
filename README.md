@@ -1,13 +1,6 @@
 # Finding the Best Pitch to Induce Lower Batting Averages
 
-<style>
-      img {
-        width: 40%;
-        height: auto;
-      }
-</style>
-
-<img title="a title" alt="Alt text" src="/images/MLB.png">
+<img title="a title" alt="Alt text" src="/images/MLB.png"style="width:200px;height:150px;">
 
 This project uses **Gradient Boosted Regression**, **Random Forest Regression**, and **Linear Regression** to find the optimal pitch to throw each qualified MLB batter.
 
