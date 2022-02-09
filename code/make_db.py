@@ -7,12 +7,12 @@ c = conn.cursor()
 
 
 # Pandas Connection
-df = pd.read_csv('../database/first_half.csv')
+df = pd.read_csv('../database/second_half2.csv')
 #df2 = pd.read_csv('../database/2021_Ball_in_Play_2.csv')
 
 #df = df.merge(df2)
 
-df.to_sql('EVENT', con=conn, if_exists='replace')
+df.to_sql('EVENT', con=conn, if_exists='append')
 print(df)
 
 

@@ -1,0 +1,338 @@
+import pandas as pd
+import sqlite3 as sql
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.fftpack import cs_diff, sc_diff
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn import metrics
+
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import VotingRegressor
+from sklearn.model_selection import GridSearchCV
+
+import access_name
+import plotly.express as px
+import streamlit as st
+import access_name
+
+pitch_list = access_name.pitch_list
+# DB Connection
+conn = sql.connect('../database/bayesatbat.db')
+c = conn.cursor()
+
+# NAME Query TEMP
+
+player_dict = access_name.player_dict
+
+batter_list = []
+for key in player_dict.keys():
+    batter_list.append(key)
+#name = player_dict.keys()
+#index = name.find(',')
+# f_name = name[:index] + '\\' + name[index
+# print(name)
+################################Streamlit Select List Side Bar ##################
+################################
+#batter_tuple = tuple(player_dict.value(), player_dict.keys())
+st.header('Expected Batting Average When Making Contact')
+
+option = st.sidebar.selectbox('Select Batter...', player_dict.values())
+
+st.write('Player selected: ', option)
+
+player_serial = list(player_dict.keys())[
+    list(player_dict.values()).index(option)]
+#st.write('serial:', result)
+#################################
+
+st.sidebar.title('Simulated Pitch Options')
+
+
+hand = st.sidebar.radio('Pitcher Handedness:', ('Right', 'Left'))
+if hand == 'Right':
+    st.sidebar.write('Right Handed')
+    throws = 'R'
+    right = 1
+else:
+    right = 0
+if hand == 'Left':
+    st.sidebar.write('Left Handed')
+    throws = 'L'
+    left = 1
+else:
+    left = 0
+
+pitch_type = st.sidebar.selectbox('Select Pitch Type...', ('Four-Seam Fastball', 'Slider', 'Change-Up', 'Cut Fastball',
+                                                           'Curveball', 'Eephus', 'Forkball', 'Splitter', 'Two-Seam Fastball', 'Knuckle Curve', 'Knuckle Ball', 'Sinker', 'Fastball(general)'))
+
+if pitch_type == 'Four-Seam Fastball':
+    pitch = 'FF'
+    ff = 1
+else:
+    ff = 0
+if pitch_type == 'Slider':
+    pitch = 'SL'
+    sl = 1
+else:
+    sl = 0
+if pitch_type == 'Change-Up':
+    pitch = 'CH'
+    ch = 1
+else:
+    ch = 0
+
+if pitch_type == 'Cut Fastball':
+    pitch = 'FC'
+    fc = 1
+else:
+    fc = 0
+if pitch_type == 'Curveball':
+    pitch = 'CU'
+    cu = 1
+else:
+    cu = 0
+if pitch_type == 'Eephus':
+    pitch = 'EP'
+    ep = 1
+else:
+    ep = 0
+if pitch_type == 'Forkball':
+    pitch = 'FO'
+    fo = 1
+else:
+    fo = 0
+if pitch_type == 'Splitter':
+    pitch = 'FS'
+    fs = 1
+else:
+    fs = 0
+if pitch_type == 'Two-Seem Fastball':
+    pitch = 'FT'
+    ft = 1
+else:
+    ft = 0
+if pitch_type == 'Knuckle Curve':
+    pitch = 'KC'
+    kc = 1
+else:
+    kc = 0
+
+if pitch_type == 'Knuckle':
+    pitch = 'KN'
+    kn = 1
+else:
+    kn = 0
+if pitch_type == 'Sinker':
+    pitch = 'SI'
+    si = 1
+else:
+    si = 0
+if pitch_type == 'Fastball(general)':
+    pitch = 'FA'
+    fa = 1
+else:
+    fa = 0
+
+if pitch_type == 'Slow-Curveball':
+    pitch = 'CS'
+    cs = 1
+else:
+    cs = 0
+
+if pitch_type == 'Screwball':
+    pitch = 'sc'
+    sc = 1
+else:
+    sc = 0
+
+########################################
+
+st.sidebar.write('Pitch:', pitch_type)
+##########################################
+
+
+###########################################
+
+
+zone = st.sidebar.selectbox('Select Pitch Zone', ('1', '2', '3', '4',
+                                                  '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'))
+#####################################
+
+speed = st.sidebar.slider('Pitch Speed (MPH):', 50, 105, 90)
+st.sidebar.write('Pitch Speed (MPH):', speed)
+
+
+spin = st.sidebar.slider('Release Spin Rate (RPM):', 100, 3600, 2500)
+
+st.sidebar.write('Spin Rate (RPM):', spin)
+
+st.sidebar.title('Count:')
+
+ball = st.sidebar.slider('Ball:', 0, 3, 1)
+
+st.sidebar.write('Balls:', ball)
+
+strike = st.sidebar.slider('Strike:', 0, 2, 1)
+
+st.sidebar.write('Strikes:', strike)
+
+simulated_pitch = [pitch, throws, zone, spin, ball, strike, speed]
+
+###################################
+hold_array = np.array(
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+hold_array[0] = zone
+hold_array[1] = spin
+hold_array[2] = ball
+hold_array[3] = strike
+hold_array[4] = speed
+hold_array[5] = ch
+hold_array[6] = cs
+hold_array[7] = cu
+hold_array[8] = fa
+hold_array[9] = fc
+hold_array[10] = ff
+hold_array[11] = fs
+hold_array[12] = kc
+hold_array[13] = kn
+hold_array[14] = sc
+hold_array[15] = si
+hold_array[16] = sl
+hold_array[17] = left
+hold_array[18] = right
+
+
+###################################
+
+# DB Query
+
+sql_query = pd.read_sql_query(
+    f'SELECT * from EVENT', conn)
+
+sim_dict = {'pitch_type': pitch, 'p_throws': throws, 'zone': zone,
+            'release_spin_rate': spin, 'balls': ball, 'strikes': strike, 'release_speed': speed}
+
+
+####################################################
+###################################################
+df = pd.DataFrame(sql_query, columns=['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
+                                      'release_speed', 'estimated_ba_using_speedangle'])
+
+
+#'SELECT * from EVENT WHERE player_name=Junis, Jakob'
+df = pd.get_dummies(df)
+y = df['estimated_ba_using_speedangle']
+df = df[df['batter'] == player_serial]
+df = df.drop('batter', axis=1)
+
+# st.write(sim_dict)
+
+
+# 3st.dataframe(df)
+#########################################
+#########################################
+# print(sql_query)
+df = df[df['balls'].notna()]
+df = df[df['strikes'].notna()]
+
+#df = df.append(simulated_pitch)
+#df = pd.get_dummies(df)
+
+#df = df[df['launch_speed'].notna()]
+df = df[df['estimated_ba_using_speedangle'].notna()]
+df = df[df['release_spin_rate'].notna()]
+#sim_pitch = df.iloc[-1]
+#df = df[:-1]
+#X = df.drop('player_name')
+st.write(df)
+y = df['estimated_ba_using_speedangle'].values
+
+# st.write(df)
+X = df.drop('estimated_ba_using_speedangle', axis=1).values
+
+
+#sc = StandardScaler()
+
+y = y.reshape(-1, 1)
+
+
+#X = sc.fit_transform(X)
+#y = sc.fit_transform(y)
+st.write(df)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=.2, random_state=0)
+
+#regressor = RandomForestRegressor(n_estimators=10, random_state=0)
+#regressor.fit(X_train, y_train.ravel())
+
+#y_pred = regressor.predict(X_test)
+
+#y_pred = sc.inverse_transform(y_pred, copy=None)
+
+
+#y_test = sc.inverse_transform(y_test)
+
+
+GBR = GradientBoostingRegressor(random_state=1)
+GBR_parameters = {'learning_rate': [0.01, 0.02, 0.03, 0.04],
+                  'subsample': [0.9, 0.5, 0.2, 0.1],
+                  'n_estimators': [100, 500, 1000, 1500],
+                  'max_depth': [4, 6, 8, 10]
+                  }
+grid_GBR = GridSearchCV(
+    estimator=GBR, param_grid=GBR_parameters, cv=2, n_jobs=-1)
+
+
+RFR = RandomForestRegressor(random_state=1)
+RFR_Grid = {
+    "n_estimators": [10, 20, 30],
+    "max_features": ["auto", "sqrt", "log2"],
+    "min_samples_split": [2, 4, 8],
+    "bootstrap": [True, False],
+}
+grid_GBR = GridSearchCV(estimator=RFR, param_grid=RFR_Grid, cv=2, n_jobs=-1)
+
+LR = LinearRegression()
+ereg = VotingRegressor(estimators=[('gb', grid_GBR), ('rf', RFR), ('lr', LR)])
+ereg = ereg.fit(X_train, y_train.ravel())
+
+y_pred = ereg.predict(X_test)
+#y_pred = sc.inverse_transform(y_pred)
+#y_test = sc.inverse_transform(y_test)
+# print(y_pred)
+
+
+#reg1.fit(X, y)
+#reg2.fit(X, y)
+#reg3.fit(X, y)
+print(metrics.mean_absolute_error(y_test, y_pred))
+print(metrics.mean_squared_error(y_test, y_pred))
+
+#########################################################
+#########################################################
+st.write(y_pred)
+st.write(y_test)
+st.write(X_test)
+st.write(metrics.mean_squared_error(y_test, y_pred))
+
+
+#sim_pitch = sim_pitch.values
+sim_pitch = hold_array
+
+sim_pitch = sim_pitch.reshape(1, -1)
+#sim_pitch = sc.fit_transform(test)
+
+pred = ereg.predict(sim_pitch)
+
+#pred = sc.inverse_transform(pred)
+st.write(pred)
+
+#prediction = sc.inverse_transform(pred)
+# print(sim_pitch.shape)
+# st.write(X_test[0])
