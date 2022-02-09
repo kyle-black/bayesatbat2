@@ -44,14 +44,28 @@ batter_list = []
 for key in player_dict.keys():
     batter_list.append(key)
 
+# Streamlit Column
+st.header('Expected Batting Average When Making Contact')
+with st.expander("Model explanation"):
+    st.write("""
+         Data derived from SQLite3 database using 2021 players with plate apperarces > 200.
+         This model uses Gradient Boosted Regression, Random Forest Regression, and Linear Regression
+         and takes the mean of all three predictions using optimized parameters (Grid Search).
+         Using the simulated pitching parameters model predicts the batting average AFTER contact.
+     """)
+
+
+col1, col2, col3 = st.columns(3)
+
+
 ################################Streamlit Select List Side Bar ##################
 ################################
 #batter_tuple = tuple(player_dict.value(), player_dict.keys())
-st.header('Expected Batting Average When Making Contact')
+st.sidebar.image('../images/MLB.png')
 
 option = st.sidebar.selectbox('Select Batter...', player_dict.values())
 
-st.write('Player selected: ', option)
+#st.write('Player selected: ', option)
 #########################################Retreive PLAYER IMAGES ####################
 player_df = pd.read_excel('../database/Player-ID-Map.xlsx')
 player_df = player_df[['NFBCLASTFIRST', 'ESPNID']]
@@ -72,12 +86,21 @@ image_url = f"https://a.espncdn.com/combiner/i?img=/i/headshots/mlb/players/full
 urllib.request.urlretrieve(image_url, filename)
 img = mpimg.imread(filename)
 # st.write()
-st.image(img)
+
+with col1:
+    st.image(img)
+    st.subheader(f'  {option}')
+
+
+# with col2:
+
+
 ####################################################################################
 player_serial = list(player_dict.keys())[
     list(player_dict.values()).index(option)]
 #st.write('serial:', result)
 #################################
+
 
 st.sidebar.title('Simulated Pitch Options')
 
@@ -361,8 +384,18 @@ sim_pitch = sim_pitch.reshape(1, -1)
 pred = ereg.predict(sim_pitch)
 
 #pred = sc.inverse_transform(pred)
-st.write(pred[0])
+with col2:
+    st.subheader(round(pred[0], 3))
 
 #prediction = sc.inverse_transform(pred)
 # print(sim_pitch.shape)
 # st.write(X_test[0])
+###########################Streamlit Footer header ########
+
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
