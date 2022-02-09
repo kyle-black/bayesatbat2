@@ -14,11 +14,23 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import VotingRegressor
 from sklearn.model_selection import GridSearchCV
 
+import matplotlib.image as mpimg
+
 import access_name
 import plotly.express as px
 import streamlit as st
 import access_name
+import requests
+import urllib
+#import cv2
+import os
 
+
+##############REMOVE PREVIOUS PLAYER IMAGES ###############
+dir = '../images/players/'
+for f in os.listdir(dir):
+    os.remove(os.path.join(dir, f))
+################################################
 pitch_list = access_name.pitch_list
 # DB Connection
 conn = sql.connect('../database/bayesatbat.db')
@@ -31,10 +43,7 @@ player_dict = access_name.player_dict
 batter_list = []
 for key in player_dict.keys():
     batter_list.append(key)
-#name = player_dict.keys()
-#index = name.find(',')
-# f_name = name[:index] + '\\' + name[index
-# print(name)
+
 ################################Streamlit Select List Side Bar ##################
 ################################
 #batter_tuple = tuple(player_dict.value(), player_dict.keys())
@@ -43,7 +52,28 @@ st.header('Expected Batting Average When Making Contact')
 option = st.sidebar.selectbox('Select Batter...', player_dict.values())
 
 st.write('Player selected: ', option)
+#########################################Retreive PLAYER IMAGES ####################
+player_df = pd.read_excel('../database/Player-ID-Map.xlsx')
+player_df = player_df[['NFBCLASTFIRST', 'ESPNID']]
 
+player_df = player_df[player_df['NFBCLASTFIRST'] == option]
+
+#player = int(player_df['ESPNID'])
+
+player_df["player"] = pd.to_numeric(player_df["ESPNID"])
+
+player = int(player_df["player"])
+
+# st.write(player)
+filename = f'../images/players/{player}.png'
+image_url = f"https://a.espncdn.com/combiner/i?img=/i/headshots/mlb/players/full/{player}.png"
+
+# calling urlretrieve function to get resource
+urllib.request.urlretrieve(image_url, filename)
+img = mpimg.imread(filename)
+# st.write()
+st.image(img)
+####################################################################################
 player_serial = list(player_dict.keys())[
     list(player_dict.values()).index(option)]
 #st.write('serial:', result)
@@ -249,7 +279,7 @@ df = df[df['release_spin_rate'].notna()]
 #sim_pitch = df.iloc[-1]
 #df = df[:-1]
 #X = df.drop('player_name')
-st.write(df)
+# st.write(df)
 y = df['estimated_ba_using_speedangle'].values
 
 # st.write(df)
@@ -263,7 +293,7 @@ y = y.reshape(-1, 1)
 
 #X = sc.fit_transform(X)
 #y = sc.fit_transform(y)
-st.write(df)
+# st.write(df)
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=.2, random_state=0)
@@ -316,9 +346,9 @@ print(metrics.mean_squared_error(y_test, y_pred))
 
 #########################################################
 #########################################################
-st.write(y_pred)
-st.write(y_test)
-st.write(X_test)
+# st.write(y_pred)
+# st.write(y_test)
+# st.write(X_test)
 st.write(metrics.mean_squared_error(y_test, y_pred))
 
 
@@ -331,7 +361,7 @@ sim_pitch = sim_pitch.reshape(1, -1)
 pred = ereg.predict(sim_pitch)
 
 #pred = sc.inverse_transform(pred)
-st.write(pred)
+st.write(pred[0])
 
 #prediction = sc.inverse_transform(pred)
 # print(sim_pitch.shape)
