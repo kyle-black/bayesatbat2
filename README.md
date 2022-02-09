@@ -1,7 +1,5 @@
 # Finding the Best Pitch to Induce Lower Batting Averages
 
-<img src="/images/MLB.png"style="width:200px;height:150px;">
-
 This project uses **Gradient Boosted Regression**, **Random Forest Regression**, and **Linear Regression** to find the optimal pitch to throw each qualified MLB batter.
 
 This model predicts Expected Batting Average (xBA) _after_ contact.
