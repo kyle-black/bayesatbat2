@@ -16,7 +16,7 @@ from sklearn.model_selection import GridSearchCV
 
 import matplotlib.image as mpimg
 
-import access_name
+#import access_name
 import plotly.express as px
 import streamlit as st
 #import access_name
