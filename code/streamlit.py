@@ -28,7 +28,7 @@ import os
 import subprocess
 import sys
 
-subprocess.run([f"{sys.executable}", "access_name.py"])
+#subprocess.run([f"{sys.executable}", "access_name.py"])
 
 #import time
 
@@ -56,10 +56,35 @@ pitch_list = access_name.pitch_list
 # DB Connection
 conn = sql.connect('../database/bayesatbat.db')
 c = conn.cursor()
+######################################################
+query = """SELECT DISTINCT batter, player_name from EVENT"""
+p_query = """SELECT DISTINCT pitch_type from EVENT"""
 
+c.execute(query)
+players = c.fetchall()
+
+c.execute(p_query)
+pitches = c.fetchall()
+conn.commit()
+# print(player_list[0][0])
+
+player_dict = {}
+for name in players:
+    player_dict[name[0]] = name[1]
+
+print(player_dict)
+
+
+pitch_list = []
+
+for pitch in pitches:
+    pitch_list.append(pitch)
+
+
+#####################################################
 # NAME Query TEMP
 
-player_dict = access_name.player_dict
+#player_dict = access_name.player_dict
 
 batter_list = []
 for key in player_dict.keys():
