@@ -6,4 +6,3 @@ plotly
 streamlit
 urllib3
 matplotlib
-access_name

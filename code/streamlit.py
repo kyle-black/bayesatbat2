@@ -19,11 +19,16 @@ import matplotlib.image as mpimg
 import access_name
 import plotly.express as px
 import streamlit as st
-import access_name
+#import access_name
 import requests
 import urllib
 #import cv2
 import os
+
+import subprocess
+import sys
+
+subprocess.run([f"{sys.executable}", "access_name.py"])
 
 #import time
 
