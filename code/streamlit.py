@@ -14,7 +14,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import VotingRegressor
 from sklearn.model_selection import GridSearchCV
 
-#import matplotlib.image as mpimg
+import matplotlib.image as mpimg
 
 import access_name
 import plotly.express as px
@@ -24,6 +24,10 @@ import requests
 import urllib
 #import cv2
 import os
+
+#import time
+
+my_bar = st.progress(0)
 
 
 ##############REMOVE PREVIOUS PLAYER IMAGES ###############
