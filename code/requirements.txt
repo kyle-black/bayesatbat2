@@ -1,7 +1,6 @@
 pandas
 sqlite3
 numpy
-scipy
 sklearn
 plotly
 streamlit

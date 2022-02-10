@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3 as sql
 import numpy as np
 #import matplotlib.pyplot as plt
-from scipy.fftpack import cs_diff, sc_diff
+#from scipy.fftpack import cs_diff, sc_diff
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
