@@ -32,7 +32,7 @@ import sys
 
 #import time
 
-my_bar = st.progress(0)
+#my_bar = st.progress(0)
 
 
 ##############REMOVE PREVIOUS PLAYER IMAGES ###############
