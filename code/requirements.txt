@@ -1,5 +1,5 @@
 pandas
-sqlite3
+pysqlite3
 numpy
 sklearn
 plotly
