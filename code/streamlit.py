@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
+import streamlit as st
 
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import RandomForestRegressor
@@ -18,7 +19,7 @@ import matplotlib.image as mpimg
 
 #import access_name
 import plotly.express as px
-import streamlit as st
+#import code.streamlit_app as st
 #import access_name
 import requests
 import urllib
@@ -60,6 +61,8 @@ st.markdown(html_string, unsafe_allow_html=True)
 db_connect = 'bayesatbat.db'
 conn = sql.connect(db_connect)
 c = conn.cursor()
+st.write(conn)
+'''
 ######################################################
 query = """SELECT DISTINCT batter, player_name from EVENT"""
 p_query = """SELECT DISTINCT pitch_type from EVENT"""
@@ -504,3 +507,5 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+'''
