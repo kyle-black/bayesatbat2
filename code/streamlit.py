@@ -1,7 +1,7 @@
 import pandas as pd
 import sqlite3 as sql
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from scipy.fftpack import cs_diff, sc_diff
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -14,7 +14,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import VotingRegressor
 from sklearn.model_selection import GridSearchCV
 
-import matplotlib.image as mpimg
+#import matplotlib.image as mpimg
 
 import access_name
 import plotly.express as px
