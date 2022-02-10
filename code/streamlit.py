@@ -37,8 +37,11 @@ my_bar = st.progress(0)
 
 ##############REMOVE PREVIOUS PLAYER IMAGES ###############
 dir = '../images/players/'
-for f in os.listdir(dir):
-    os.remove(os.path.join(dir, f))
+try:
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))
+except:
+    print('no picture')
 ################################################
 
 html_string1 = '''<body style="background-color:powderblue;">
@@ -52,7 +55,7 @@ html_string1 = '''<body style="background-color:powderblue;">
 html_string = '<h1 style="font-family: Garamond, serif;">Simulated Batting Average After Contact</h1>'
 st.markdown(html_string, unsafe_allow_html=True)
 
-pitch_list = access_name.pitch_list
+#pitch_list = access_name.pitch_list
 # DB Connection
 conn = sql.connect('../database/bayesatbat.db')
 c = conn.cursor()
