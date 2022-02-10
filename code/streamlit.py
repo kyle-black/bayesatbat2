@@ -31,6 +31,18 @@ dir = '../images/players/'
 for f in os.listdir(dir):
     os.remove(os.path.join(dir, f))
 ################################################
+
+html_string1 = '''<body style="background-color:powderblue;">
+
+<h1>This is a heading</h1>
+<p>This is a paragraph.</p>
+
+</body>'''
+
+
+html_string = '<h1 style="font-family: Garamond, serif;">Simulated Batting Average After Contact</h1>'
+st.markdown(html_string, unsafe_allow_html=True)
+
 pitch_list = access_name.pitch_list
 # DB Connection
 conn = sql.connect('../database/bayesatbat.db')
@@ -45,7 +57,7 @@ for key in player_dict.keys():
     batter_list.append(key)
 
 # Streamlit Column
-st.header('Expected Batting Average When Making Contact')
+#st.header('Expected Batting Average When Making Contact')
 with st.expander("Model explanation"):
     st.write("""
          Data derived from SQLite3 database using 2021 players with plate apperarces > 200.
@@ -86,10 +98,6 @@ image_url = f"https://a.espncdn.com/combiner/i?img=/i/headshots/mlb/players/full
 urllib.request.urlretrieve(image_url, filename)
 img = mpimg.imread(filename)
 # st.write()
-
-with col1:
-    st.image(img)
-    st.subheader(f'  {option}')
 
 
 # with col2:
@@ -213,6 +221,8 @@ st.sidebar.write('Pitch:', pitch_type)
 
 zone = st.sidebar.selectbox('Select Pitch Zone', ('1', '2', '3', '4',
                                                   '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'))
+
+
 #####################################
 
 speed = st.sidebar.slider('Pitch Speed (MPH):', 50, 105, 90)
@@ -234,6 +244,61 @@ strike = st.sidebar.slider('Strike:', 0, 2, 1)
 st.sidebar.write('Strikes:', strike)
 
 simulated_pitch = [pitch, throws, zone, spin, ball, strike, speed]
+
+
+with col1:
+    st.image(img)
+    st.subheader(f'  {option}')
+
+with col2:
+    st.write(f'Pitcher Hand: {throws}')
+    st.write(f'Pitch Type: {pitch}')
+    st.write(f'Pitch Speed: {speed} MPH')
+    st.write(f'Pitch Spin: {spin} RPM')
+    st.write(f'Balls: {ball}')
+    st.write(f'Strikes: {strike}')
+    if zone == '1':
+        st.image('../images/strikezone/1.png')
+
+    if zone == '2':
+        st.image('../images/strikezone/2.png')
+
+    if zone == '3':
+        st.image('../images/strikezone/3.png')
+
+    if zone == '4':
+        st.image('../images/strikezone/4.png')
+
+    if zone == '5':
+        st.image('../images/strikezone/5.png')
+
+    if zone == '6':
+        st.image('../images/strikezone/6.png')
+
+    if zone == '7':
+        st.image('../images/strikezone/7.png')
+
+    if zone == '8':
+        st.image('../images/strikezone/8.png')
+
+    if zone == '9':
+        st.image('../images/strikezone/9.png')
+
+    if zone == '10':
+        st.image('../images/strikezone/10.png')
+
+    if zone == '11':
+        st.image('../images/strikezone/11.png')
+
+    if zone == '12':
+        st.image('../images/strikezone/12.png')
+
+    if zone == '13':
+        st.image('../images/strikezone/13.png')
+
+    if zone == '14':
+        st.image('../images/strikezone/14.png')
+
 
 ###################################
 hold_array = np.array(
@@ -309,27 +374,11 @@ y = df['estimated_ba_using_speedangle'].values
 X = df.drop('estimated_ba_using_speedangle', axis=1).values
 
 
-#sc = StandardScaler()
-
 y = y.reshape(-1, 1)
 
 
-#X = sc.fit_transform(X)
-#y = sc.fit_transform(y)
-# st.write(df)
-
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=.2, random_state=0)
-
-#regressor = RandomForestRegressor(n_estimators=10, random_state=0)
-#regressor.fit(X_train, y_train.ravel())
-
-#y_pred = regressor.predict(X_test)
-
-#y_pred = sc.inverse_transform(y_pred, copy=None)
-
-
-#y_test = sc.inverse_transform(y_test)
 
 
 GBR = GradientBoostingRegressor(random_state=1)
@@ -372,7 +421,7 @@ print(metrics.mean_squared_error(y_test, y_pred))
 # st.write(y_pred)
 # st.write(y_test)
 # st.write(X_test)
-st.write(metrics.mean_squared_error(y_test, y_pred))
+#st.write(metrics.mean_squared_error(y_test, y_pred))
 
 
 #sim_pitch = sim_pitch.values
@@ -382,10 +431,28 @@ sim_pitch = sim_pitch.reshape(1, -1)
 #sim_pitch = sc.fit_transform(test)
 
 pred = ereg.predict(sim_pitch)
+if pred[0] < 0:
+    pred = '.000'
+
+else:
+    pred = round(pred[0], 3)
+
 
 #pred = sc.inverse_transform(pred)
-with col2:
-    st.subheader(round(pred[0], 3))
+with col3:
+    st.subheader('Simulated Batting Average:')
+
+    html_string2 = f'<h1 style="font-family: Garamond, serif;color:green;">  {pred}</h1>'
+    st.markdown(html_string2, unsafe_allow_html=True)
+
+    RMSE = metrics.mean_squared_error(y_test, y_pred)
+    RMSE = round(RMSE, 3)
+    st.subheader('Error(RMSE):')
+    html_string3 = f'<h1 style="font-family: Garamond, serif;color:red;">  {RMSE}</h1>'
+    st.markdown(html_string3, unsafe_allow_html=True)
+
+    # st.subheader(f'{pred}')
+
 
 #prediction = sc.inverse_transform(pred)
 # print(sim_pitch.shape)
