@@ -57,7 +57,8 @@ st.markdown(html_string, unsafe_allow_html=True)
 
 #pitch_list = access_name.pitch_list
 # DB Connection
-conn = sql.connect('../database/bayesatbat.db')
+db_connect = 'bayesatbat.db'
+conn = sql.connect(db_connect)
 c = conn.cursor()
 ######################################################
 query = """SELECT DISTINCT batter, player_name from EVENT"""
