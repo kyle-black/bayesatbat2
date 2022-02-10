@@ -66,8 +66,8 @@ st.write(conn)
 ######################################################
 query = """SELECT DISTINCT batter, player_name from EVENT"""
 p_query = """SELECT DISTINCT pitch_type from EVENT"""
-
-c.execute(query)
+query2 = """SELECT * from EVENT"""
+c.execute(query2)
 players = c.fetchall()
 '''
 c.execute(p_query)
