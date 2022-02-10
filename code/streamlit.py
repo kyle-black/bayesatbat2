@@ -62,14 +62,14 @@ db_connect = 'bayesatbat.db'
 conn = sql.connect(db_connect)
 c = conn.cursor()
 st.write(conn)
-'''
+
 ######################################################
 query = """SELECT DISTINCT batter, player_name from EVENT"""
 p_query = """SELECT DISTINCT pitch_type from EVENT"""
 
 c.execute(query)
 players = c.fetchall()
-
+'''
 c.execute(p_query)
 pitches = c.fetchall()
 conn.commit()
