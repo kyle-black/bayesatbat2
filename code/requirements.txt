@@ -4,5 +4,5 @@ numpy
 sklearn
 plotly
 streamlit
-urllib
+urllib3
 os
