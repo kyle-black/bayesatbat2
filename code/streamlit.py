@@ -30,15 +30,15 @@ import subprocess
 import sys
 
 
-csv_path = os.path.abspath("MAIN.csv")
+#csv_path = os.path.abspath("MAIN.csv")
 #import pandasql
-
+csv_path = ('/app/bayesatbat2/code/MAIN.csv')
 #subprocess.run([f"{sys.executable}", "access_name.py"])
 
 #import time
 
 #my_bar = st.progress(0)
-
+st.write(csv_path)
 
 ##############REMOVE PREVIOUS PLAYER IMAGES ###############
 dir = '../images/players/'
