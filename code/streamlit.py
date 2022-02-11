@@ -29,6 +29,8 @@ import os
 import subprocess
 import sys
 
+import pandasql
+
 #subprocess.run([f"{sys.executable}", "access_name.py"])
 
 #import time
@@ -58,37 +60,31 @@ st.markdown(html_string, unsafe_allow_html=True)
 
 #pitch_list = access_name.pitch_list
 # DB Connection
-
-db_connect = 'bayesatbat.db'
-db = os.path.abspath("bayesatbat.db")
-conn = sql.connect(db, check_same_thread=False)
-c = conn.cursor()
-st.write(conn)
+#db_connect = 'bayesatbat.db'
+#conn = sql.connect(db_connect)
+#c = conn.cursor()
+# st.write(conn)
 
 ######################################################
-query = """SELECT DISTINCT batter, player_name from EVENT"""
-p_query = """SELECT DISTINCT pitch_type from EVENT"""
-query2 = """SELECT * from EVENT"""
-#query= """SELECT * from ALTUVE"""
-c.execute(query)
-players = c.fetchall()
 
-c.execute(p_query)
-pitches = c.fetchall()
-conn.commit()
+player_df = pd.read_csv('MAIN.csv')
 # print(player_list[0][0])
 
+
+player_df = player_df[['batter', 'player_name']]
+player_df = player_df.drop_duplicates()
+
+
 player_dict = {}
-for name in players:
-    player_dict[name[0]] = name[1]
+# for name in players:
+#   player_dict[name[0]] = name[1]
 
-print(player_dict)
+# print(player_dict)
 
+for name, row in player_df[:].iterrows():
 
-pitch_list = []
-
-for pitch in pitches:
-    pitch_list.append(pitch)
+    player_dict[row['batter']] = row['player_name']
+    #print(row['batter'], row['player_name'])
 
 
 #####################################################
@@ -373,8 +369,9 @@ hold_array[18] = right
 
 # DB Query
 
-sql_query = pd.read_sql_query(
-    f'SELECT * from EVENT', conn)
+# sql_query = pd.read_sql_query(
+#   f'SELECT * from EVENT', conn)
+
 
 sim_dict = {'pitch_type': pitch, 'p_throws': throws, 'zone': zone,
             'release_spin_rate': spin, 'balls': ball, 'strikes': strike, 'release_speed': speed}
@@ -382,9 +379,16 @@ sim_dict = {'pitch_type': pitch, 'p_throws': throws, 'zone': zone,
 
 ####################################################
 ###################################################
-df = pd.DataFrame(sql_query, columns=['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
-                                      'release_speed', 'estimated_ba_using_speedangle'])
+# df = pd.DataFrame(sql_query, columns=['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
+#                                     'release_speed', 'estimated_ba_using_speedangle'])
 
+# df = pd.DataFrame(sql_query, columns=['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
+#                                     'release_speed', 'estimated_ba_using_speedangle'])
+
+df = pd.read_csv('MAIN.csv')
+
+df = df[['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
+         'release_speed', 'estimated_ba_using_speedangle']]
 
 #'SELECT * from EVENT WHERE player_name=Junis, Jakob'
 df = pd.get_dummies(df)
