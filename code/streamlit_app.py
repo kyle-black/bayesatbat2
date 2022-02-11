@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
+import streamlit as st
 
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import RandomForestRegressor
@@ -15,7 +16,7 @@ from sklearn.ensemble import VotingRegressor
 from sklearn.model_selection import GridSearchCV
 
 import matplotlib.image as mpimg
-import streamlit as st
+
 #import access_name
 import plotly.express as px
 #import code.streamlit_app as st
@@ -27,6 +28,8 @@ import os
 
 import subprocess
 import sys
+
+import pandasql
 
 #subprocess.run([f"{sys.executable}", "access_name.py"])
 
@@ -58,26 +61,24 @@ st.markdown(html_string, unsafe_allow_html=True)
 #pitch_list = access_name.pitch_list
 # DB Connection
 db_connect = 'bayesatbat.db'
-#conn = sql.connect(db_connect)
-#c = conn.cursor()
+conn = sql.connect(db_connect)
+c = conn.cursor()
+st.write(conn)
+
 ######################################################
-#query = """SELECT DISTINCT batter, player_name from EVENT"""
+query = """SELECT DISTINCT batter, player_name from EVENT"""
 p_query = """SELECT DISTINCT pitch_type from EVENT"""
+query2 = """SELECT * from EVENT"""
+c.execute(query)
+players = c.fetchall()
 
-# c.execute(query)
-#players = c.fetchall()
-
-# c.execute(p_query)
-#pitches = c.fetchall()
-# conn.commit()
+c.execute(p_query)
+pitches = c.fetchall()
+conn.commit()
 # print(player_list[0][0])
 
-
-player_df = pd.read_csv('MAIN.csv')
-player_df[['batter', 'player_name']]
-player_df = player_df.drop_duplicates()
 player_dict = {}
-for name in player_df:
+for name in players:
     player_dict[name[0]] = name[1]
 
 print(player_dict)
@@ -85,8 +86,8 @@ print(player_dict)
 
 pitch_list = []
 
-# for pitch in pitches:
-#   pitch_list.append(pitch)
+for pitch in pitches:
+    pitch_list.append(pitch)
 
 
 #####################################################
@@ -371,16 +372,16 @@ hold_array[18] = right
 
 # DB Query
 
-# sql_query = pd.read_sql_query(
-#   f'SELECT * from EVENT', conn)
+sql_query = pd.read_sql_query(
+    f'SELECT * from EVENT', conn)
 
 sim_dict = {'pitch_type': pitch, 'p_throws': throws, 'zone': zone,
             'release_spin_rate': spin, 'balls': ball, 'strikes': strike, 'release_speed': speed}
 
-csvimport = pd.read_csv('MAIN.csv')
+
 ####################################################
 ###################################################
-df = pd.DataFrame(csvimport, columns=['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
+df = pd.DataFrame(sql_query, columns=['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
                                       'release_speed', 'estimated_ba_using_speedangle'])
 
 
