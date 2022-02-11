@@ -115,7 +115,7 @@ col1, col2, col3 = st.columns(3)
 ################################Streamlit Select List Side Bar ##################
 ################################
 #batter_tuple = tuple(player_dict.value(), player_dict.keys())
-st.sidebar.image('../images/MLB.png')
+st.sidebar.image('/images/MLB.png')
 
 option = st.sidebar.selectbox('Select Batter...', player_dict.values())
 
