@@ -1,0 +1,8 @@
+pandas
+pysqlite3
+numpy
+sklearn
+plotly
+streamlit
+urllib3
+matplotlib
