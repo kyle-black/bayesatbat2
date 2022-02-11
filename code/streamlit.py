@@ -59,7 +59,7 @@ st.markdown(html_string, unsafe_allow_html=True)
 #pitch_list = access_name.pitch_list
 # DB Connection
 db_connect = 'bayesatbat.db'
-conn = sql.connect(db_connect,check_same_thread=False)
+conn = sql.connect(db_connect, check_same_thread=False)
 c = conn.cursor()
 st.write(conn)
 
@@ -67,9 +67,10 @@ st.write(conn)
 query = """SELECT DISTINCT batter, player_name from EVENT"""
 p_query = """SELECT DISTINCT pitch_type from EVENT"""
 query2 = """SELECT * from EVENT"""
+query = """SELECT * from ALTUVE"""
 c.execute(query)
 players = c.fetchall()
-
+'''
 c.execute(p_query)
 pitches = c.fetchall()
 conn.commit()
@@ -507,3 +508,4 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+'''
