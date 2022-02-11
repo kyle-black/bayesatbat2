@@ -41,7 +41,7 @@ csv_path = ('/app/bayesatbat2/code/MAIN.csv')
 st.write(csv_path)
 
 ##############REMOVE PREVIOUS PLAYER IMAGES ###############
-dir = '../images/players/'
+dir = 'images/players/'
 try:
     for f in os.listdir(dir):
         os.remove(os.path.join(dir, f))
@@ -115,13 +115,13 @@ col1, col2, col3 = st.columns(3)
 ################################Streamlit Select List Side Bar ##################
 ################################
 #batter_tuple = tuple(player_dict.value(), player_dict.keys())
-st.sidebar.image('/images/MLB.png')
+st.sidebar.image('images/MLB.png')
 
 option = st.sidebar.selectbox('Select Batter...', player_dict.values())
 
 #st.write('Player selected: ', option)
 #########################################Retreive PLAYER IMAGES ####################
-player_df = pd.read_excel('../database/Player-ID-Map.xlsx')
+player_df = pd.read_excel('database/Player-ID-Map.xlsx')
 player_df = player_df[['NFBCLASTFIRST', 'ESPNID']]
 
 player_df = player_df[player_df['NFBCLASTFIRST'] == option]
@@ -133,7 +133,7 @@ player_df["player"] = pd.to_numeric(player_df["ESPNID"])
 player = int(player_df["player"])
 
 # st.write(player)
-filename = f'../images/players/{player}.png'
+filename = f'images/players/{player}.png'
 image_url = f"https://a.espncdn.com/combiner/i?img=/i/headshots/mlb/players/full/{player}.png"
 
 # calling urlretrieve function to get resource
