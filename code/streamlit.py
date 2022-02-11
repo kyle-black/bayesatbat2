@@ -29,7 +29,7 @@ import os
 import subprocess
 import sys
 
-import pandasql
+#import pandasql
 
 #subprocess.run([f"{sys.executable}", "access_name.py"])
 
