@@ -29,6 +29,8 @@ import os
 import subprocess
 import sys
 
+
+csv_path = os.path.abspath("MAIN.csv")
 #import pandasql
 
 #subprocess.run([f"{sys.executable}", "access_name.py"])
@@ -67,7 +69,7 @@ st.markdown(html_string, unsafe_allow_html=True)
 
 ######################################################
 
-player_df = pd.read_csv('MAIN.csv')
+player_df = pd.read_csv(csv_path)
 # print(player_list[0][0])
 
 
@@ -385,7 +387,7 @@ sim_dict = {'pitch_type': pitch, 'p_throws': throws, 'zone': zone,
 # df = pd.DataFrame(sql_query, columns=['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
 #                                     'release_speed', 'estimated_ba_using_speedangle'])
 
-df = pd.read_csv('MAIN.csv')
+df = pd.read_csv(csv_path)
 
 df = df[['batter', 'pitch_type', 'p_throws', 'zone', 'release_spin_rate', 'balls', 'strikes',
          'release_speed', 'estimated_ba_using_speedangle']]
