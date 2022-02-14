@@ -31,8 +31,8 @@ import sys
 
 
 #csv_path = os.path.abspath("MAIN.csv")
-#import pandasql
-csv_path = ('/app/bayesatbat2/code/MAIN.csv')
+
+csv_path = ('MAIN.csv')
 #subprocess.run([f"{sys.executable}", "access_name.py"])
 
 #import time
@@ -300,46 +300,46 @@ with col2:
     st.write(f'Balls: {ball}')
     st.write(f'Strikes: {strike}')
     if zone == '1':
-        st.image('/images/strikezone/1.png')
+        st.image('images/strikezone/1.png')
 
     if zone == '2':
-        st.image('/images/strikezone/2.png')
+        st.image('images/strikezone/2.png')
 
     if zone == '3':
-        st.image('/images/strikezone/3.png')
+        st.image('images/strikezone/3.png')
 
     if zone == '4':
-        st.image('/images/strikezone/4.png')
+        st.image('images/strikezone/4.png')
 
     if zone == '5':
-        st.image('/images/strikezone/5.png')
+        st.image('images/strikezone/5.png')
 
     if zone == '6':
-        st.image('/images/strikezone/6.png')
+        st.image('images/strikezone/6.png')
 
     if zone == '7':
-        st.image('/images/strikezone/7.png')
+        st.image('images/strikezone/7.png')
 
     if zone == '8':
-        st.image('/images/strikezone/8.png')
+        st.image('images/strikezone/8.png')
 
     if zone == '9':
-        st.image('/images/strikezone/9.png')
+        st.image('images/strikezone/9.png')
 
     if zone == '10':
-        st.image('/images/strikezone/10.png')
+        st.image('images/strikezone/10.png')
 
     if zone == '11':
-        st.image('/images/strikezone/11.png')
+        st.image('images/strikezone/11.png')
 
     if zone == '12':
-        st.image('/images/strikezone/12.png')
+        st.image('images/strikezone/12.png')
 
     if zone == '13':
-        st.image('/images/strikezone/13.png')
+        st.image('images/strikezone/13.png')
 
     if zone == '14':
-        st.image('/images/strikezone/14.png')
+        st.image('images/strikezone/14.png')
 
 
 ###################################

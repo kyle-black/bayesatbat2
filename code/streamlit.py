@@ -38,7 +38,7 @@ csv_path = ('MAIN.csv')
 #import time
 
 #my_bar = st.progress(0)
-st.write(csv_path)
+# st.write(csv_path)
 
 ##############REMOVE PREVIOUS PLAYER IMAGES ###############
 dir = 'images/players/'
